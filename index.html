@@ -190,7 +190,7 @@
 
   .controls {
     width: 100%;
-    max-width: 480px;
+    max-width: 320px;
     display: flex;
     gap: 12px;
     padding: 12px 0 4px 0;
@@ -402,7 +402,7 @@ function beep(freq = 880, duration = 0.15, delay = 0) {
     osc.type = 'sine';
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.5, audioCtx.currentTime + delay + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -426,7 +426,7 @@ function ding() {
     osc.type = 'triangle';
     osc.frequency.value = 1046.5; // C6
     gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.35, audioCtx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.55, audioCtx.currentTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
