@@ -416,6 +416,24 @@ function transitionSignal(toRest) {
   beep(toRest ? 520 : 880, 0.18, 0.22);
   if (navigator.vibrate) navigator.vibrate(toRest ? [120, 60, 120] : [200]);
 }
+function ding() {
+  // a single clean bell-like tone marking the actual start of the new segment,
+  // played right after the transition beeps finish
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = 1046.5; // C6
+    gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.35, audioCtx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.55);
+  } catch (e) { /* audio unavailable */ }
+}
 
 // ---- Pre-recorded "Next: <exercise>" voice clips (hardcoded mp3s as base64 data URIs) ----
 // Keyed by exercise name — must match the names in the EXERCISES array above exactly.
@@ -477,10 +495,11 @@ function tick() {
     const nextStep = sequence[stepIndex];
     remaining = nextStep.duration;
     transitionSignal(nextStep.type === 'rest');
+    setTimeout(() => ding(), 450); // marks the actual start of the new segment
     if (nextStep.type === 'rest') {
-      // play a beat after the transition beeps finish (~0.45s) so they don't overlap
+      // play after the transition beeps + ding finish, so nothing overlaps
       const nextName = getNextWorkName(stepIndex);
-      setTimeout(() => playNextUpClip(nextName), 450);
+      setTimeout(() => playNextUpClip(nextName), 900);
     }
   }
   render();
@@ -567,6 +586,18 @@ function finish() {
 startPauseBtn.addEventListener('click', () => {
   if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
   if (audioCtx.state === 'suspended') audioCtx.resume();
+  // iOS Safari sometimes needs more than resume() to fully unlock tone playback —
+  // actually starting and stopping a silent oscillator synchronously within this
+  // tap reliably unlocks it for the later async beep() calls during the workout.
+  try {
+    const unlockOsc = audioCtx.createOscillator();
+    const unlockGain = audioCtx.createGain();
+    unlockGain.gain.value = 0.00001;
+    unlockOsc.connect(unlockGain);
+    unlockGain.connect(audioCtx.destination);
+    unlockOsc.start(audioCtx.currentTime);
+    unlockOsc.stop(audioCtx.currentTime + 0.01);
+  } catch (e) { /* ignore */ }
   // iOS Safari only allows programmatic <audio> playback (like our later setTimeout
   // calls) if that exact element instance already played something during a real
   // user gesture. So here, on tap, we play one of the real clips muted, then reset
