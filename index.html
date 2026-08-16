@@ -569,19 +569,23 @@ startPauseBtn.addEventListener('click', () => {
   if (audioCtx.state === 'suspended') audioCtx.resume();
   // iOS Safari only allows programmatic <audio> playback (like our later setTimeout
   // calls) if that exact element instance already played something during a real
-  // user gesture. So here, on tap, we play one of the real clips at zero volume,
-  // then immediately reset it — this "primes" the element for silent background use.
+  // user gesture. So here, on tap, we play one of the real clips muted, then reset
+  // it — this "primes" the element for silent background use. The reset happens on
+  // a fixed timer rather than waiting on the play() promise, so a hung/unresolved
+  // promise can't leave the element stuck muted (which would silence all later clips).
   if (!nextUpAudioEl) {
     nextUpAudioEl = new Audio();
     const firstClip = Object.values(NEXT_UP_AUDIO)[0];
     if (firstClip) {
       nextUpAudioEl.src = firstClip;
-      nextUpAudioEl.volume = 0;
-      nextUpAudioEl.play().then(() => {
+      nextUpAudioEl.muted = true;
+      const playPromise = nextUpAudioEl.play();
+      if (playPromise && playPromise.catch) playPromise.catch(() => {});
+      setTimeout(() => {
         nextUpAudioEl.pause();
         nextUpAudioEl.currentTime = 0;
-        nextUpAudioEl.volume = 1;
-      }).catch(() => { nextUpAudioEl.volume = 1; });
+        nextUpAudioEl.muted = false;
+      }, 150);
     }
   }
   running ? pause() : start();
