@@ -31,7 +31,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: calc(env(safe-area-inset-top) + 40px) 20px calc(env(safe-area-inset-bottom) + 48px) 20px;
+    padding: calc(env(safe-area-inset-top) + 60px) 20px calc(env(safe-area-inset-bottom) + 72px) 20px;
     height: 100vh;
     overflow: hidden;
   }
@@ -45,18 +45,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
     margin-bottom: 4px;
   }
-  .loop-count, .exercise-count {
-    color: var(--dim);
-    font-size: 13px;
-    letter-spacing: 0.04em;
+  .progress-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: rgba(78,205,196,0.12);
+    padding: 6px 16px;
+    border-radius: 999px;
   }
   .progress-sep {
-    color: var(--dim);
-    font-size: 12px;
-    opacity: 0.5;
+    opacity: 0.6;
   }
   .progress-section.hidden { display: none; }
 
@@ -122,34 +125,44 @@
   .next-up span { color: var(--text); font-weight: 700; }
 
   .loop-title {
-    font-size: 15px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 10px auto;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1.5px solid var(--rest);
+    border-radius: 12px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: 0.01em;
-    margin-bottom: 6px;
+    text-align: center;
+    transition: border-color 0.25s;
   }
+  .loop-title.work-phase { border-color: var(--work); }
   .loop-setup {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin-bottom: 6px;
+    gap: 18px;
+    margin-bottom: 10px;
   }
   .loop-setup button {
     flex: none;
-    width: 34px;
-    height: 34px;
+    width: 46px;
+    height: 46px;
     padding: 0;
     border-radius: 50%;
     background: var(--panel);
     color: var(--text);
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 700;
     line-height: 1;
   }
   .loop-setup .loop-value {
-    min-width: 80px;
+    min-width: 100px;
     text-align: center;
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--text);
   }
   .loop-setup.hidden { display: none; }
@@ -233,9 +246,11 @@
   </div>
   <div class="progress-section" id="progressSection">
     <div class="progress-row">
-      <div class="loop-count" id="loopCount">Loop 1 of 5</div>
-      <div class="progress-sep">&middot;</div>
-      <div class="exercise-count" id="exerciseCount">Exercise 1 of 5</div>
+      <span class="progress-pill">
+        <span id="loopCount">Loop 1 of 5</span>
+        <span class="progress-sep">&middot;</span>
+        <span id="exerciseCount">Exercise 1 of 5</span>
+      </span>
     </div>
   </div>
 </div>
@@ -374,6 +389,7 @@ function render() {
   exerciseCountEl.textContent = `Exercise ${exerciseNumber} of ${EXERCISES.length}`;
   phaseLabelEl.textContent = isRest ? 'Rest' : 'Work';
   phaseLabelEl.classList.toggle('rest', isRest);
+  loopTitleEl.classList.toggle('work-phase', !isRest);
   exerciseNameEl.textContent = isRest ? 'Rest' : step.name;
   timeDisplayEl.textContent = remaining;
   ringFgEl.classList.toggle('rest', isRest);
