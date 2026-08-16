@@ -32,47 +32,33 @@
     align-items: center;
     justify-content: space-between;
     padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
   }
   .top {
     width: 100%;
     max-width: 480px;
     text-align: center;
-    padding-top: 18px;
+    padding-top: 8px;
   }
   .progress-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    margin-bottom: 6px;
+    gap: 12px;
+    margin-bottom: 4px;
   }
   .loop-count, .exercise-count {
     color: var(--dim);
-    font-size: 15px;
+    font-size: 13px;
     letter-spacing: 0.04em;
   }
   .progress-sep {
     color: var(--dim);
-    font-size: 13px;
+    font-size: 12px;
     opacity: 0.5;
   }
-  .dots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-  .dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #2a2e38;
-    transition: background 0.25s;
-  }
-  .dot.done { background: var(--dim); }
-  .dot.active { background: var(--work); box-shadow: 0 0 0 4px rgba(255,90,78,0.2); }
-  .dot.active.rest { background: var(--rest); box-shadow: 0 0 0 4px rgba(78,205,196,0.2); }
+  .progress-section.hidden { display: none; }
 
   .center {
     flex: 1;
@@ -82,9 +68,10 @@
     justify-content: center;
     width: 100%;
     max-width: 480px;
+    min-height: 0;
   }
   .phase-label {
-    font-size: 22px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: 0.03em;
     text-transform: uppercase;
@@ -93,16 +80,16 @@
   }
   .phase-label.rest { color: var(--rest); }
   .exercise-name {
-    font-size: 34px;
+    font-size: 24px;
     font-weight: 700;
-    margin: 6px 0 28px 0;
+    margin: 2px 0 10px 0;
     text-align: center;
-    min-height: 42px;
+    min-height: 30px;
   }
   .timer-ring {
     position: relative;
-    width: min(72vw, 320px);
-    height: min(72vw, 320px);
+    width: min(52vw, 220px);
+    height: min(52vw, 220px);
   }
   .timer-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
   .ring-bg { fill: none; stroke: var(--panel); stroke-width: 10; }
@@ -120,66 +107,100 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 76px;
+    font-size: 52px;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
   .next-up {
-    margin-top: 26px;
+    margin-top: 12px;
     color: var(--dim);
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 600;
     text-align: center;
-    min-height: 36px;
+    min-height: 28px;
   }
   .next-up span { color: var(--text); font-weight: 700; }
 
   .loop-title {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.01em;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
   }
   .loop-setup {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
-    margin-bottom: 8px;
+    gap: 14px;
+    margin-bottom: 6px;
   }
   .loop-setup button {
     flex: none;
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
     padding: 0;
     border-radius: 50%;
     background: var(--panel);
     color: var(--text);
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 1;
   }
   .loop-setup .loop-value {
-    min-width: 90px;
+    min-width: 80px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--text);
   }
   .loop-setup.hidden { display: none; }
+
+  .home-label {
+    color: var(--dim);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .exercise-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .exercise-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .exercise-list .num {
+    color: var(--dim);
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 18px;
+  }
 
   .controls {
     width: 100%;
     max-width: 480px;
     display: flex;
-    gap: 14px;
-    padding: 24px 0 10px 0;
+    gap: 12px;
+    padding: 12px 0 4px 0;
   }
   button {
     flex: 1;
-    padding: 18px 0;
-    font-size: 18px;
+    padding: 14px 0;
+    font-size: 16px;
     font-weight: 700;
-    border-radius: 16px;
+    border-radius: 14px;
     border: none;
     color: var(--text);
     letter-spacing: 0.02em;
@@ -197,7 +218,7 @@
     text-align: center;
   }
   .done-screen.show { display: flex; }
-  .done-screen h1 { font-size: 40px; margin-bottom: 8px; }
+  .done-screen h1 { font-size: 32px; margin-bottom: 8px; }
   .done-screen p { color: var(--dim); font-size: 16px; }
 </style>
 </head>
@@ -210,12 +231,18 @@
     <div class="loop-value" id="loopValue">5 loops</div>
     <button id="loopIncBtn" aria-label="More loops">&plus;</button>
   </div>
-  <div class="progress-row">
-    <div class="loop-count" id="loopCount">Loop 1 of 5</div>
-    <div class="progress-sep">&middot;</div>
-    <div class="exercise-count" id="exerciseCount">Exercise 1 of 5</div>
+  <div class="progress-section" id="progressSection">
+    <div class="progress-row">
+      <div class="loop-count" id="loopCount">Loop 1 of 5</div>
+      <div class="progress-sep">&middot;</div>
+      <div class="exercise-count" id="exerciseCount">Exercise 1 of 5</div>
+    </div>
   </div>
-  <div class="dots" id="dots"></div>
+</div>
+
+<div class="center" id="homeScreen">
+  <div class="home-label">Exercises</div>
+  <ol class="exercise-list" id="exerciseList"></ol>
 </div>
 
 <div class="center" id="mainScreen">
@@ -256,24 +283,29 @@ const EXERCISES = [
 const DEFAULT_LOOPS = 5;   // how many times through the exercise list, editable in-app before starting
 const MIN_LOOPS = 1;
 const MAX_LOOPS = 10;
+const INCLUDE_INTRO = true;   // adds one warm-up rest before the very first exercise (announces it), shown once per session only
+const INTRO_SECONDS = REST_SECONDS;
 // -------------------------------------------------
-
-// One "loop" = work/rest for every exercise (rest after every exercise, including the
-// last one in the loop, as a cooldown buffer before the next loop or the very end).
-const LOOP_STEPS = EXERCISES.length * 2;
 
 let loopCount = DEFAULT_LOOPS;
 let sessionStarted = false; // becomes true on first Start tap; locks the loop-count stepper
 
 // Build the full flat sequence for the chosen number of loops.
-// Each step also carries which loop number (1-indexed) it belongs to.
+// Each step carries which loop number (1-indexed) and, for work/rest pairs,
+// which exercise number (1-indexed) it belongs to — stored explicitly so the
+// on-screen counters stay correct even with the intro step shifting indices.
 let sequence = [];
 function buildSequence() {
   sequence = [];
+  if (INCLUDE_INTRO) {
+    // One-time lead-in: counts down and announces the first exercise, only before Loop 1.
+    sequence.push({ type: 'rest', duration: INTRO_SECONDS, loop: 1, exerciseNumber: null, intro: true });
+  }
   for (let loop = 1; loop <= loopCount; loop++) {
-    EXERCISES.forEach((name) => {
-      sequence.push({ type: 'work', name, duration: WORK_SECONDS, loop });
-      sequence.push({ type: 'rest', duration: REST_SECONDS, loop });
+    EXERCISES.forEach((name, i) => {
+      const exerciseNumber = i + 1;
+      sequence.push({ type: 'work', name, duration: WORK_SECONDS, loop, exerciseNumber });
+      sequence.push({ type: 'rest', duration: REST_SECONDS, loop, exerciseNumber });
     });
   }
 }
@@ -301,7 +333,6 @@ const loopIncBtn = document.getElementById('loopIncBtn');
 const loopTitleEl = document.getElementById('loopTitle');
 const loopCountEl = document.getElementById('loopCount');
 const exerciseCountEl = document.getElementById('exerciseCount');
-const dotsEl = document.getElementById('dots');
 const phaseLabelEl = document.getElementById('phaseLabel');
 const exerciseNameEl = document.getElementById('exerciseName');
 const timeDisplayEl = document.getElementById('timeDisplay');
@@ -311,34 +342,21 @@ const startPauseBtn = document.getElementById('startPauseBtn');
 const resetBtn = document.getElementById('resetBtn');
 const mainScreen = document.getElementById('mainScreen');
 const doneScreen = document.getElementById('doneScreen');
+const homeScreen = document.getElementById('homeScreen');
+const progressSectionEl = document.getElementById('progressSection');
+const exerciseListEl = document.getElementById('exerciseList');
 
 const RADIUS = 90;
 const CIRC = 2 * Math.PI * RADIUS;
 ringFgEl.style.strokeDasharray = CIRC;
 
-function buildDots() {
-  dotsEl.innerHTML = '';
-  sequence.forEach((step, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (step.type === 'rest' ? ' rest-dot' : '');
-    dotsEl.appendChild(d);
-  });
-}
-buildDots();
+// Populate the home-screen exercise list once from EXERCISES
+exerciseListEl.innerHTML = EXERCISES.map((name, i) =>
+  `<li><span class="num">${i + 1}</span>${name}</li>`
+).join('');
+
 loopTitleEl.textContent = LOOP_TITLE;
 updateLoopValueDisplay();
-
-function updateDots() {
-  const dots = dotsEl.children;
-  for (let i = 0; i < dots.length; i++) {
-    dots[i].classList.remove('active', 'done', 'rest');
-    if (i < stepIndex) dots[i].classList.add('done');
-    else if (i === stepIndex) {
-      dots[i].classList.add('active');
-      if (sequence[i].type === 'rest') dots[i].classList.add('rest');
-    }
-  }
-}
 
 function updateLoopValueDisplay() {
   loopValueEl.textContent = `${loopCount} loop${loopCount === 1 ? '' : 's'}`;
@@ -349,10 +367,11 @@ function render() {
   const isRest = step.type === 'rest';
 
   loopCountEl.textContent = `Loop ${step.loop} of ${loopCount}`;
-  // Work and its following rest share the same exercise number, so the counter
-  // ticks up the moment a new exercise's work phase starts (not at rest).
-  const exerciseIndexInLoop = Math.floor((stepIndex % LOOP_STEPS) / 2);
-  exerciseCountEl.textContent = `Exercise ${exerciseIndexInLoop + 1} of ${EXERCISES.length}`;
+  // Exercise number is stored per-step at build time (not derived from position),
+  // so it stays correct even with the one-time intro step shifting indices.
+  // During the intro (exerciseNumber is null), show "Exercise 1" as a preview.
+  const exerciseNumber = step.exerciseNumber || 1;
+  exerciseCountEl.textContent = `Exercise ${exerciseNumber} of ${EXERCISES.length}`;
   phaseLabelEl.textContent = isRest ? 'Rest' : 'Work';
   phaseLabelEl.classList.toggle('rest', isRest);
   exerciseNameEl.textContent = isRest ? 'Rest' : step.name;
@@ -371,7 +390,6 @@ function render() {
   }
 
   startPauseBtn.classList.toggle('rest-color', isRest);
-  updateDots();
 }
 
 // ---- Audio ----
@@ -468,14 +486,42 @@ function tick() {
   render();
 }
 
+function showHomeScreen() {
+  homeScreen.style.display = 'flex';
+  mainScreen.style.display = 'none';
+  doneScreen.classList.remove('show');
+  progressSectionEl.classList.add('hidden');
+}
+function showMainScreen() {
+  homeScreen.style.display = 'none';
+  mainScreen.style.display = 'flex';
+  doneScreen.classList.remove('show');
+  progressSectionEl.classList.remove('hidden');
+}
+function showDoneScreen() {
+  homeScreen.style.display = 'none';
+  mainScreen.style.display = 'none';
+  doneScreen.classList.add('show');
+}
+showHomeScreen(); // initial state on page load
+
 function start() {
   if (running) return;
+  const isFreshSessionStart = !sessionStarted;
   running = true;
   sessionStarted = true;
   loopSetupEl.classList.add('hidden'); // lock loop count once a session is underway
+  showMainScreen();
   startPauseBtn.textContent = 'Pause';
   requestWakeLock();
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  // If we're beginning fresh on the one-time intro step, announce the first exercise
+  // right away (this step is entered directly on load, not via a tick() transition,
+  // so it needs its own trigger here rather than relying on the usual transition logic).
+  if (isFreshSessionStart && sequence[stepIndex] && sequence[stepIndex].intro) {
+    const firstName = getNextWorkName(stepIndex - 1);
+    setTimeout(() => playNextUpClip(firstName), 300);
+  }
   intervalId = setInterval(tick, 1000);
 }
 function pause() {
@@ -489,12 +535,10 @@ function reset() {
   sessionStarted = false;
   loopSetupEl.classList.remove('hidden');
   stepIndex = 0;
-  buildSequence();   // rebuild in case loopCount changed while a prior session's dots were still showing
-  buildDots();
+  buildSequence();   // rebuild in case loopCount changed since the prior session
   remaining = sequence[0].duration;
   startPauseBtn.textContent = 'Start';
-  doneScreen.classList.remove('show');
-  mainScreen.style.display = 'flex';
+  showHomeScreen();
   render();
 }
 
@@ -505,7 +549,6 @@ function changeLoopCount(delta) {
   loopCount = next;
   updateLoopValueDisplay();
   buildSequence();
-  buildDots();
   remaining = sequence[0].duration;
   render();
 }
@@ -517,8 +560,7 @@ function finish() {
   beep(880, 0.15, 0.18);
   beep(1100, 0.25, 0.36);
   if (navigator.vibrate) navigator.vibrate([150, 80, 150, 80, 300]);
-  mainScreen.style.display = 'none';
-  doneScreen.classList.add('show');
+  showDoneScreen();
   startPauseBtn.textContent = 'Start';
 }
 
