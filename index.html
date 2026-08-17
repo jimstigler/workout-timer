@@ -43,23 +43,27 @@
   }
   .progress-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    gap: 40px;
     margin-bottom: 4px;
   }
-  .progress-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  .stat-block {
+    text-align: center;
+  }
+  .stat-label {
     font-size: 15px;
     font-weight: 600;
-    color: #ffffff;
-    background: rgba(78,205,196,0.12);
-    padding: 6px 16px;
-    border-radius: 999px;
+    color: var(--rest);
+    letter-spacing: 0.02em;
+    margin-bottom: 2px;
   }
-  .progress-sep {
-    opacity: 0.6;
+  .stat-value {
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
   }
   .progress-section.hidden { display: none; }
 
@@ -246,11 +250,14 @@
   </div>
   <div class="progress-section" id="progressSection">
     <div class="progress-row">
-      <span class="progress-pill">
-        <span id="loopCount">Loop 1 of 5</span>
-        <span class="progress-sep">&middot;</span>
-        <span id="exerciseCount">Exercise 1 of 5</span>
-      </span>
+      <div class="stat-block">
+        <div class="stat-label">Loop</div>
+        <div class="stat-value" id="loopCount">1/5</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Exercise</div>
+        <div class="stat-value" id="exerciseCount">1/5</div>
+      </div>
     </div>
   </div>
 </div>
@@ -384,12 +391,12 @@ function render() {
   const step = sequence[stepIndex];
   const isRest = step.type === 'rest';
 
-  loopCountEl.textContent = `Loop ${step.loop} of ${loopCount}`;
+  loopCountEl.textContent = `${step.loop}/${loopCount}`;
   // Exercise number is stored per-step at build time (not derived from position),
   // so it stays correct even with the one-time intro step shifting indices.
   // During the intro (exerciseNumber is null), show "Exercise 1" as a preview.
   const exerciseNumber = step.exerciseNumber || 1;
-  exerciseCountEl.textContent = `Exercise ${exerciseNumber} of ${EXERCISES.length}`;
+  exerciseCountEl.textContent = `${exerciseNumber}/${EXERCISES.length}`;
   phaseLabelEl.textContent = isRest ? 'Rest' : 'Work';
   phaseLabelEl.classList.toggle('rest', isRest);
   loopTitleEl.classList.toggle('work-phase', !isRest);
@@ -421,7 +428,7 @@ function beep(freq = 880, duration = 0.15, delay = 0) {
     osc.type = 'sine';
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.5, audioCtx.currentTime + delay + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.85, audioCtx.currentTime + delay + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -445,7 +452,7 @@ function ding() {
     osc.type = 'triangle';
     osc.frequency.value = 1046.5; // C6
     gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.55, audioCtx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.9, audioCtx.currentTime + 0.02);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
