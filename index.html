@@ -1018,7 +1018,7 @@ function renderExerciseEditList() {
       <span class="drag-handle">&#8942;&#8942;</span>
       <input type="text" value="${escapeHtml(exercise.name)}" data-index="${i}" autocomplete="off">
       <button class="audio-btn ${exercise.audio ? 'has-audio' : ''}" data-index="${i}" aria-label="${exercise.audio ? 'Replace voice clip' : 'Add voice clip'}">${MIC_SVG}</button>
-      <input type="file" accept="audio/*" capture class="audio-file-input" data-index="${i}" hidden>
+      <input type="file" accept="audio/*,.mp3,.m4a,.wav" class="audio-file-input" data-index="${i}" hidden>
       <button class="delete-x" data-index="${i}" aria-label="Remove exercise">&times;</button>
     </div>
   `).join('');
