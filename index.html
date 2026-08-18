@@ -120,15 +120,6 @@
     font-weight: 700;
     font-variant-numeric: tabular-nums;
   }
-  .next-up {
-    margin-top: 12px;
-    color: var(--dim);
-    font-size: 22px;
-    font-weight: 600;
-    text-align: center;
-    min-height: 28px;
-  }
-  .next-up span { color: var(--text); font-weight: 700; }
 
   .loop-title {
     width: 100%;
@@ -279,7 +270,6 @@
     </svg>
     <div class="time-display" id="timeDisplay">--</div>
   </div>
-  <div class="next-up" id="nextUp">&nbsp;</div>
 </div>
 
 <div class="center done-screen" id="doneScreen">
@@ -364,7 +354,6 @@ const exerciseCountEl = document.getElementById('exerciseCount');
 const phaseLabelEl = document.getElementById('phaseLabel');
 const exerciseNameEl = document.getElementById('exerciseName');
 const timeDisplayEl = document.getElementById('timeDisplay');
-const nextUpEl = document.getElementById('nextUp');
 const ringFgEl = document.getElementById('ringFg');
 const startPauseBtn = document.getElementById('startPauseBtn');
 const resetBtn = document.getElementById('resetBtn');
@@ -404,20 +393,14 @@ function render() {
   phaseLabelEl.classList.toggle('rest', isRest);
   loopTitleEl.classList.toggle('work-phase', !isRest);
   progressRowEl.classList.toggle('work-phase', !isRest);
-  exerciseNameEl.textContent = isRest ? 'Rest' : step.name;
+  // During work, show the exercise name; during rest, show what's coming up next
+  // (every rest now precedes a real exercise, since the trailing rest was removed).
+  exerciseNameEl.textContent = isRest ? `Next: ${getNextWorkName(stepIndex)}` : step.name;
   timeDisplayEl.textContent = remaining;
   ringFgEl.classList.toggle('rest', isRest);
 
   const frac = remaining / step.duration;
   ringFgEl.style.strokeDashoffset = CIRC * (1 - frac);
-
-  if (isRest) {
-    const nextName = getNextWorkName(stepIndex);
-    nextUpEl.innerHTML = nextName ? `Next: <span>${nextName}</span>` : '<span>Last one!</span>';
-  } else {
-    const next = sequence[stepIndex + 1];
-    nextUpEl.innerHTML = next ? `Next: <span>Rest</span>` : '<span>Last one!</span>';
-  }
 
   startPauseBtn.classList.toggle('rest-color', isRest);
 }
