@@ -94,6 +94,11 @@
     max-width: 480px;
     min-height: 0;
   }
+  #mainScreen {
+    display: none; /* JS shows this via showMainScreen(); hidden by default so
+                       there's no flash of the coral "Work" run screen before
+                       the script runs and calls showHomeScreen() on load */
+  }
   .phase-label {
     font-size: 16px;
     font-weight: 600;
