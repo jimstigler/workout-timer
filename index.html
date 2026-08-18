@@ -57,7 +57,9 @@
     color: var(--rest);
     letter-spacing: 0.02em;
     margin-bottom: 2px;
+    transition: color 0.25s;
   }
+  .progress-row.work-phase .stat-label { color: var(--work); }
   .stat-value {
     font-size: 34px;
     font-weight: 700;
@@ -249,7 +251,7 @@
     <button id="loopIncBtn" aria-label="More loops">&plus;</button>
   </div>
   <div class="progress-section" id="progressSection">
-    <div class="progress-row">
+    <div class="progress-row" id="progressRow">
       <div class="stat-block">
         <div class="stat-label">Loop</div>
         <div class="stat-value" id="loopCount">1/5</div>
@@ -357,6 +359,7 @@ const loopDecBtn = document.getElementById('loopDecBtn');
 const loopIncBtn = document.getElementById('loopIncBtn');
 const loopTitleEl = document.getElementById('loopTitle');
 const loopCountEl = document.getElementById('loopCount');
+const progressRowEl = document.getElementById('progressRow');
 const exerciseCountEl = document.getElementById('exerciseCount');
 const phaseLabelEl = document.getElementById('phaseLabel');
 const exerciseNameEl = document.getElementById('exerciseName');
@@ -400,6 +403,7 @@ function render() {
   phaseLabelEl.textContent = isRest ? 'Rest' : 'Work';
   phaseLabelEl.classList.toggle('rest', isRest);
   loopTitleEl.classList.toggle('work-phase', !isRest);
+  progressRowEl.classList.toggle('work-phase', !isRest);
   exerciseNameEl.textContent = isRest ? 'Rest' : step.name;
   timeDisplayEl.textContent = remaining;
   ringFgEl.classList.toggle('rest', isRest);
