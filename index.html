@@ -535,6 +535,11 @@
     border-radius: 12px;
     background: none;
     width: 100%;
+    flex: 1;
+  }
+  .loops-actions-row {
+    display: flex;
+    gap: 10px;
     flex: none;
   }
 </style>
@@ -624,13 +629,18 @@
     </div>
   </div>
   <button class="settings-done-bottom" id="settingsDoneBtn">Done</button>
+  <button class="add-exercise-row" id="exportLoopBtn">Export this loop</button>
   <button class="delete-loop-btn" id="deleteLoopBtn">Delete this loop</button>
 </div>
 
 <div class="screen-view" id="allLoopsView">
   <div class="loops-list-title">All Loops</div>
   <div class="routine-list" id="routineList"></div>
-  <button class="new-loop-btn" id="newLoopBtn">+ New Loop</button>
+  <div class="loops-actions-row">
+    <button class="new-loop-btn" id="newLoopBtn">+ New Loop</button>
+    <button class="new-loop-btn" id="importLoopBtn">Import Loop</button>
+  </div>
+  <input type="file" accept=".json,application/json" id="importLoopFileInput" hidden>
 </div>
 
 <script>
@@ -1005,6 +1015,7 @@ const workIncBtn = document.getElementById('workIncBtn');
 const restDecBtn = document.getElementById('restDecBtn');
 const restIncBtn = document.getElementById('restIncBtn');
 const deleteLoopBtn = document.getElementById('deleteLoopBtn');
+const exportLoopBtn = document.getElementById('exportLoopBtn');
 const settingsBackBtn = document.getElementById('settingsBackBtn');
 const settingsDoneBtn = document.getElementById('settingsDoneBtn');
 
@@ -1153,6 +1164,33 @@ deleteLoopBtn.addEventListener('click', () => {
   showAllLoopsScreen();
 });
 
+// Exports the current loop (name, exercises, audio, timing) as a downloadable
+// .json file — a backup, and something you can send to someone else to import.
+const EXPORT_FILE_TYPE = 'isometricLoopAppExport';
+const EXPORT_FILE_VERSION = 1;
+exportLoopBtn.addEventListener('click', () => {
+  const exportData = {
+    fileType: EXPORT_FILE_TYPE,
+    version: EXPORT_FILE_VERSION,
+    name: currentRoutine.name,
+    exercises: currentRoutine.exercises.map(ex => ({ name: ex.name, audio: ex.audio || null })),
+    workSeconds: currentRoutine.workSeconds,
+    restSeconds: currentRoutine.restSeconds,
+    loopCount: currentRoutine.loopCount || DEFAULT_LOOPS
+  };
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const filename = (currentRoutine.name || 'loop').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '.json';
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || 'loop.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+});
+
 settingsBackBtn.addEventListener('click', () => {
   showAllLoopsScreen();
 });
@@ -1167,6 +1205,8 @@ gearBtnEl.addEventListener('click', () => {
 // ==================== All Loops screen ====================
 const routineListEl = document.getElementById('routineList');
 const newLoopBtn = document.getElementById('newLoopBtn');
+const importLoopBtn = document.getElementById('importLoopBtn');
+const importLoopFileInput = document.getElementById('importLoopFileInput');
 
 function renderAllLoopsScreen() {
   routineListEl.innerHTML = routines.map(r => `
@@ -1214,6 +1254,52 @@ newLoopBtn.addEventListener('click', () => {
   saveRoutines();
   saveCurrentRoutineId();
   showSettingsScreen();
+});
+
+// Imports a loop previously exported from this app (or shared by someone else)
+// as a new, independent loop — never overwrites an existing one.
+importLoopBtn.addEventListener('click', () => {
+  importLoopFileInput.click();
+});
+importLoopFileInput.addEventListener('change', () => {
+  const file = importLoopFileInput.files && importLoopFileInput.files[0];
+  importLoopFileInput.value = ''; // allow importing the same filename again later
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(reader.result);
+    } catch (e) {
+      alert("Couldn't read that file — make sure it's a loop exported from this app.");
+      return;
+    }
+    if (!parsed || !Array.isArray(parsed.exercises) || parsed.exercises.length === 0) {
+      alert("That file doesn't look like a valid loop export.");
+      return;
+    }
+    const importedRoutine = {
+      id: genRoutineId(),
+      name: (typeof parsed.name === 'string' && parsed.name.trim()) ? parsed.name.trim() : 'Imported Loop',
+      exercises: parsed.exercises.map(ex => ({
+        id: genExerciseId(),
+        name: (ex && typeof ex.name === 'string' && ex.name.trim()) ? ex.name.trim() : 'Exercise',
+        audio: (ex && typeof ex.audio === 'string') ? ex.audio : null
+      })),
+      workSeconds: (typeof parsed.workSeconds === 'number' && parsed.workSeconds > 0) ? parsed.workSeconds : 30,
+      restSeconds: (typeof parsed.restSeconds === 'number' && parsed.restSeconds > 0) ? parsed.restSeconds : 10,
+      loopCount: (typeof parsed.loopCount === 'number' && parsed.loopCount > 0) ? parsed.loopCount : DEFAULT_LOOPS
+    };
+    routines.push(importedRoutine);
+    currentRoutine = importedRoutine;
+    saveRoutines();
+    saveCurrentRoutineId();
+    showSettingsScreen(); // let them review/rename before running it
+  };
+  reader.onerror = () => {
+    alert("Couldn't read that file.");
+  };
+  reader.readAsText(file);
 });
 
 function start() {
