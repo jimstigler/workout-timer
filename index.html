@@ -31,7 +31,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: calc(env(safe-area-inset-top) + 60px) 20px calc(env(safe-area-inset-bottom) + 72px) 20px;
+    padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
     height: 100vh;
     overflow: hidden;
   }
@@ -293,6 +293,7 @@
     justify-content: space-between;
     width: 100%;
     height: 100%;
+    padding: 60px 0 72px 0; /* the run screen's own extra breathing room, on top of body's safe-area padding */
   }
 
   .screen-view {
@@ -303,7 +304,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     flex-direction: column;
-    padding-top: calc(env(safe-area-inset-top) + 20px);
+    padding: 20px 0 16px 0; /* modest extra, on top of body's safe-area padding — not the run screen's larger amount */
   }
   .screen-view.show { display: flex; }
   #settingsView { max-width: 320px; } /* matches the home screen's content width exactly */
@@ -314,11 +315,11 @@
     color: #ffffff;
     font-size: 16px;
     font-weight: 700;
-    padding: 14px 0;
+    padding: 12px 0;
     border-radius: 14px;
     border: none;
-    margin-top: 6px;
-    margin-bottom: 12px;
+    margin-top: 4px;
+    margin-bottom: 8px;
     flex: none;
   }
 
@@ -327,8 +328,8 @@
     background: var(--panel);
     border: 1.5px solid var(--rest);
     border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 18px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
     flex: none;
   }
   .settings-field input[type="text"] {
@@ -336,7 +337,7 @@
     background: transparent;
     border: none;
     color: var(--text);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     letter-spacing: 0.01em;
     text-align: center;
@@ -350,24 +351,23 @@
     color: var(--dim);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     flex: none;
   }
   .exercise-edit-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 8px;
+    gap: 5px;
+    margin-bottom: 6px;
     flex: none;
   }
   .exercise-edit-row {
     background: var(--panel);
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
     gap: 8px;
-    touch-action: none;
   }
   .exercise-edit-row.dragging { opacity: 0.6; z-index: 10; position: relative; }
   .drag-handle {
@@ -415,10 +415,10 @@
     color: var(--rest);
     font-size: 13px;
     font-weight: 700;
-    padding: 10px 0;
+    padding: 8px 0;
     border: 1px dashed #2a2e38;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     background: none;
     width: 100%;
     flex: none;
@@ -427,21 +427,21 @@
   .time-settings-row {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     flex: none;
   }
   .time-setting {
     flex: 1;
     background: var(--panel);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 8px 12px;
   }
   .time-setting-label {
     font-size: 10px;
     color: var(--dim);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .time-setting-controls {
     display: flex;
@@ -450,12 +450,12 @@
   }
   .time-setting-controls button {
     flex: none;
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: #20242e;
     color: var(--text);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     border: none;
     padding: 0;
