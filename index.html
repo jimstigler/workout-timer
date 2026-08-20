@@ -56,6 +56,10 @@
     padding: 0;
   }
   .gear-btn.hidden { display: none; }
+  .icon-btn-group {
+    display: flex;
+    gap: 10px;
+  }
   .progress-row {
     display: flex;
     align-items: flex-start;
@@ -141,10 +145,14 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .loop-title {
+  .loop-header {
     width: 100%;
     max-width: 320px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto;
+  }
+  .loop-title {
+    width: 100%;
+    margin: 0 0 10px 0;
     padding: 12px 16px;
     background: var(--panel);
     border: 1.5px solid var(--rest);
@@ -159,6 +167,19 @@
     white-space: nowrap;
   }
   .loop-title.work-phase { border-color: var(--work); }
+  .all-loops-link-top {
+    display: block;
+    width: 100%;
+    margin: 0 0 10px 0;
+    background: none;
+    border: none;
+    color: var(--rest);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 0;
+    text-align: left;
+  }
+  .all-loops-link-top.hidden { display: none; }
   .loop-setup {
     display: flex;
     align-items: center;
@@ -282,27 +303,11 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     flex-direction: column;
+    padding-top: calc(env(safe-area-inset-top) + 20px);
   }
   .screen-view.show { display: flex; }
+  #settingsView { max-width: 320px; } /* matches the home screen's content width exactly */
 
-  .settings-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 18px;
-    flex: none;
-  }
-  .settings-link {
-    background: none;
-    border: none;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 8px 0;
-    width: auto;
-    flex: none;
-    color: var(--rest);
-    text-align: left;
-  }
   .settings-done-bottom {
     width: 100%;
     background: var(--rest);
@@ -318,26 +323,23 @@
   }
 
   .settings-field {
+    width: 100%;
     background: var(--panel);
-    border-radius: 10px;
-    padding: 10px 14px;
+    border: 1.5px solid var(--rest);
+    border-radius: 12px;
+    padding: 12px 16px;
     margin-bottom: 18px;
     flex: none;
-  }
-  .settings-field-label {
-    font-size: 10px;
-    color: var(--dim);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 3px;
   }
   .settings-field input[type="text"] {
     width: 100%;
     background: transparent;
     border: none;
     color: var(--text);
-    font-size: 17px;
+    font-size: 22px;
     font-weight: 700;
+    letter-spacing: 0.01em;
+    text-align: center;
     outline: none;
     font-family: inherit;
     padding: 0;
@@ -465,17 +467,8 @@
     font-variant-numeric: tabular-nums;
   }
 
-  .delete-loop-btn {
-    text-align: center;
-    color: var(--work);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 12px 0;
-    background: none;
-    border: none;
-    width: 100%;
-    flex: none;
-  }
+  .new-loop-btn.danger { color: var(--work); }
+  #exportLoopBtn { margin-bottom: 0; }
 
   .loops-list-title {
     color: var(--text);
@@ -496,14 +489,13 @@
     background: var(--panel);
     border-radius: 12px;
     padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: block;
+    text-align: left;
     border: 1.5px solid transparent;
-    gap: 8px;
+    width: 100%;
+    flex: none;
   }
   .routine-card.active { border-color: var(--rest); }
-  .routine-card-main { flex: 1; min-width: 0; text-align: left; background: none; border: none; padding: 0; }
   .routine-card-name {
     color: var(--text);
     font-size: 15px;
@@ -515,15 +507,6 @@
     font-size: 12px;
     margin-top: 2px;
     text-align: left;
-  }
-  .routine-edit-btn {
-    color: var(--dim);
-    font-size: 17px;
-    background: none;
-    border: none;
-    padding: 6px;
-    width: auto;
-    flex: none;
   }
   .new-loop-btn {
     text-align: center;
@@ -540,22 +523,27 @@
   .loops-actions-row {
     display: flex;
     gap: 10px;
+    margin-bottom: 10px;
     flex: none;
   }
+  #exportAllBtn { flex: none; }
 </style>
 </head>
 <body>
 
 <div id="runView">
 <div class="top">
-  <div class="loop-title" id="loopTitle">My Isometric Loop</div>
+  <div class="loop-header">
+    <button class="all-loops-link-top" id="allLoopsBtn">&larr; All Loops</button>
+    <div class="loop-title" id="loopTitle">My Isometric Loop</div>
+  </div>
   <div class="loop-setup" id="loopSetup">
     <div class="stepper-group">
-      <button id="loopDecBtn" aria-label="Fewer loops">&minus;</button>
+      <button id="loopDecBtn" aria-label="Fewer loops" title="Fewer loops">&minus;</button>
       <div class="loop-value" id="loopValue">5 Loops</div>
-      <button id="loopIncBtn" aria-label="More loops">&plus;</button>
+      <button id="loopIncBtn" aria-label="More loops" title="More loops">&plus;</button>
     </div>
-    <button class="gear-btn" id="gearBtn" aria-label="Loop settings">&#9881;</button>
+    <button class="gear-btn" id="gearBtn" aria-label="Loop settings" title="Loop settings">&#9881;</button>
   </div>
   <div class="progress-section" id="progressSection">
     <div class="progress-row" id="progressRow">
@@ -600,11 +588,7 @@
 </div>
 
 <div class="screen-view" id="settingsView">
-  <div class="settings-header">
-    <button class="settings-link" id="settingsBackBtn">&larr; All Loops</button>
-  </div>
   <div class="settings-field">
-    <div class="settings-field-label">Loop name</div>
     <input type="text" id="settingsNameInput" autocomplete="off" autocapitalize="words">
   </div>
   <div class="settings-section-label">Exercises &middot; drag to reorder</div>
@@ -629,8 +613,10 @@
     </div>
   </div>
   <button class="settings-done-bottom" id="settingsDoneBtn">Done</button>
-  <button class="add-exercise-row" id="exportLoopBtn">Export this loop</button>
-  <button class="delete-loop-btn" id="deleteLoopBtn">Delete this loop</button>
+  <div class="loops-actions-row">
+    <button class="new-loop-btn" id="exportLoopBtn">Export this loop</button>
+    <button class="new-loop-btn danger" id="deleteLoopBtn">Delete this loop</button>
+  </div>
 </div>
 
 <div class="screen-view" id="allLoopsView">
@@ -640,6 +626,7 @@
     <button class="new-loop-btn" id="newLoopBtn">+ New Loop</button>
     <button class="new-loop-btn" id="importLoopBtn">Import Loop</button>
   </div>
+  <button class="new-loop-btn" id="exportAllBtn">Export All Loops</button>
   <input type="file" accept=".json,application/json" id="importLoopFileInput" hidden>
 </div>
 
@@ -785,6 +772,7 @@ const loopDecBtn = document.getElementById('loopDecBtn');
 const loopIncBtn = document.getElementById('loopIncBtn');
 const loopTitleEl = document.getElementById('loopTitle');
 const gearBtnEl = document.getElementById('gearBtn');
+const allLoopsBtnEl = document.getElementById('allLoopsBtn');
 const loopCountEl = document.getElementById('loopCount');
 const progressRowEl = document.getElementById('progressRow');
 const exerciseCountEl = document.getElementById('exerciseCount');
@@ -989,6 +977,7 @@ function showHomeScreen() {
   doneScreen.classList.remove('show');
   progressSectionEl.classList.add('hidden');
   gearBtnEl.classList.remove('hidden');
+  allLoopsBtnEl.classList.remove('hidden');
 }
 function showMainScreen() {
   homeScreen.style.display = 'none';
@@ -996,6 +985,7 @@ function showMainScreen() {
   doneScreen.classList.remove('show');
   progressSectionEl.classList.remove('hidden');
   gearBtnEl.classList.add('hidden');
+  allLoopsBtnEl.classList.add('hidden');
 }
 function showDoneScreen() {
   homeScreen.style.display = 'none';
@@ -1016,7 +1006,6 @@ const restDecBtn = document.getElementById('restDecBtn');
 const restIncBtn = document.getElementById('restIncBtn');
 const deleteLoopBtn = document.getElementById('deleteLoopBtn');
 const exportLoopBtn = document.getElementById('exportLoopBtn');
-const settingsBackBtn = document.getElementById('settingsBackBtn');
 const settingsDoneBtn = document.getElementById('settingsDoneBtn');
 
 function renderSettingsScreen() {
@@ -1164,36 +1153,46 @@ deleteLoopBtn.addEventListener('click', () => {
   showAllLoopsScreen();
 });
 
-// Exports the current loop (name, exercises, audio, timing) as a downloadable
-// .json file — a backup, and something you can send to someone else to import.
+// Exports one or more loops as a downloadable .json file — a backup, and
+// something you can send to someone else to import.
 const EXPORT_FILE_TYPE = 'isometricLoopAppExport';
+const EXPORT_FILE_TYPE_ALL = 'isometricLoopAppExportAll';
 const EXPORT_FILE_VERSION = 1;
-exportLoopBtn.addEventListener('click', () => {
-  const exportData = {
-    fileType: EXPORT_FILE_TYPE,
-    version: EXPORT_FILE_VERSION,
-    name: currentRoutine.name,
-    exercises: currentRoutine.exercises.map(ex => ({ name: ex.name, audio: ex.audio || null })),
-    workSeconds: currentRoutine.workSeconds,
-    restSeconds: currentRoutine.restSeconds,
-    loopCount: currentRoutine.loopCount || DEFAULT_LOOPS
+
+function routineToExportPayload(routine) {
+  return {
+    name: routine.name,
+    exercises: routine.exercises.map(ex => ({ name: ex.name, audio: ex.audio || null })),
+    workSeconds: routine.workSeconds,
+    restSeconds: routine.restSeconds,
+    loopCount: routine.loopCount || DEFAULT_LOOPS
   };
-  const json = JSON.stringify(exportData, null, 2);
+}
+function downloadJsonFile(data, filename) {
+  const json = JSON.stringify(data, null, 2);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const filename = (currentRoutine.name || 'loop').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '.json';
   const a = document.createElement('a');
   a.href = url;
-  a.download = filename || 'loop.json';
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+function slugify(name) {
+  return (name || 'loop').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'loop';
+}
+
+exportLoopBtn.addEventListener('click', () => {
+  const exportData = {
+    fileType: EXPORT_FILE_TYPE,
+    version: EXPORT_FILE_VERSION,
+    ...routineToExportPayload(currentRoutine)
+  };
+  downloadJsonFile(exportData, slugify(currentRoutine.name) + '.json');
 });
 
-settingsBackBtn.addEventListener('click', () => {
-  showAllLoopsScreen();
-});
 settingsDoneBtn.addEventListener('click', () => {
   applyCurrentRoutineToUI();
   showHomeScreen();
@@ -1201,25 +1200,36 @@ settingsDoneBtn.addEventListener('click', () => {
 gearBtnEl.addEventListener('click', () => {
   showSettingsScreen();
 });
+allLoopsBtnEl.addEventListener('click', () => {
+  showAllLoopsScreen();
+});
 
 // ==================== All Loops screen ====================
 const routineListEl = document.getElementById('routineList');
 const newLoopBtn = document.getElementById('newLoopBtn');
 const importLoopBtn = document.getElementById('importLoopBtn');
 const importLoopFileInput = document.getElementById('importLoopFileInput');
+const exportAllBtn = document.getElementById('exportAllBtn');
+
+exportAllBtn.addEventListener('click', () => {
+  const exportData = {
+    fileType: EXPORT_FILE_TYPE_ALL,
+    version: EXPORT_FILE_VERSION,
+    routines: routines.map(routineToExportPayload)
+  };
+  const date = new Date().toISOString().slice(0, 10);
+  downloadJsonFile(exportData, `all-loops-backup-${date}.json`);
+});
 
 function renderAllLoopsScreen() {
   routineListEl.innerHTML = routines.map(r => `
-    <div class="routine-card ${r.id === currentRoutine.id ? 'active' : ''}" data-id="${r.id}">
-      <button class="routine-card-main" data-id="${r.id}" data-action="select">
-        <div class="routine-card-name">${escapeHtml(r.name)}</div>
-        <div class="routine-card-meta">${r.exercises.length} exercise${r.exercises.length === 1 ? '' : 's'}${r.id === currentRoutine.id ? ' &middot; last run' : ''}</div>
-      </button>
-      <button class="routine-edit-btn" data-id="${r.id}" data-action="edit" aria-label="Edit loop">&#9998;</button>
-    </div>
+    <button class="routine-card ${r.id === currentRoutine.id ? 'active' : ''}" data-id="${r.id}">
+      <div class="routine-card-name">${escapeHtml(r.name)}</div>
+      <div class="routine-card-meta">${r.exercises.length} exercise${r.exercises.length === 1 ? '' : 's'}${r.id === currentRoutine.id ? ' &middot; last run' : ''}</div>
+    </button>
   `).join('');
 
-  routineListEl.querySelectorAll('[data-action="select"]').forEach(btn => {
+  routineListEl.querySelectorAll('.routine-card').forEach(btn => {
     btn.addEventListener('click', () => {
       const r = routines.find(x => x.id === btn.dataset.id);
       if (!r) return;
@@ -1227,15 +1237,6 @@ function renderAllLoopsScreen() {
       saveCurrentRoutineId();
       applyCurrentRoutineToUI();
       showHomeScreen();
-    });
-  });
-  routineListEl.querySelectorAll('[data-action="edit"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const r = routines.find(x => x.id === btn.dataset.id);
-      if (!r) return;
-      currentRoutine = r;
-      saveCurrentRoutineId();
-      showSettingsScreen();
     });
   });
 }
@@ -1256,8 +1257,27 @@ newLoopBtn.addEventListener('click', () => {
   showSettingsScreen();
 });
 
-// Imports a loop previously exported from this app (or shared by someone else)
-// as a new, independent loop — never overwrites an existing one.
+// Imports loop(s) previously exported from this app (or shared by someone else)
+// as new, independent loops — never overwrites an existing one. Handles both a
+// single-loop export and a multi-loop "Export All" backup file.
+function parsedExerciseToObject(ex) {
+  return {
+    id: genExerciseId(),
+    name: (ex && typeof ex.name === 'string' && ex.name.trim()) ? ex.name.trim() : 'Exercise',
+    audio: (ex && typeof ex.audio === 'string') ? ex.audio : null
+  };
+}
+function parsedRoutineToObject(parsed) {
+  return {
+    id: genRoutineId(),
+    name: (typeof parsed.name === 'string' && parsed.name.trim()) ? parsed.name.trim() : 'Imported Loop',
+    exercises: parsed.exercises.map(parsedExerciseToObject),
+    workSeconds: (typeof parsed.workSeconds === 'number' && parsed.workSeconds > 0) ? parsed.workSeconds : 30,
+    restSeconds: (typeof parsed.restSeconds === 'number' && parsed.restSeconds > 0) ? parsed.restSeconds : 10,
+    loopCount: (typeof parsed.loopCount === 'number' && parsed.loopCount > 0) ? parsed.loopCount : DEFAULT_LOOPS
+  };
+}
+
 importLoopBtn.addEventListener('click', () => {
   importLoopFileInput.click();
 });
@@ -1274,22 +1294,29 @@ importLoopFileInput.addEventListener('change', () => {
       alert("Couldn't read that file — make sure it's a loop exported from this app.");
       return;
     }
+
+    // Multi-loop backup file (from "Export All Loops")
+    if (parsed && parsed.fileType === EXPORT_FILE_TYPE_ALL && Array.isArray(parsed.routines)) {
+      const validRoutines = parsed.routines.filter(r => r && Array.isArray(r.exercises) && r.exercises.length > 0);
+      if (validRoutines.length === 0) {
+        alert("That file doesn't contain any valid loops.");
+        return;
+      }
+      const importedRoutines = validRoutines.map(parsedRoutineToObject);
+      routines.push(...importedRoutines);
+      currentRoutine = importedRoutines[0];
+      saveRoutines();
+      saveCurrentRoutineId();
+      showAllLoopsScreen(); // several loops just appeared — show the full list
+      return;
+    }
+
+    // Single-loop export
     if (!parsed || !Array.isArray(parsed.exercises) || parsed.exercises.length === 0) {
       alert("That file doesn't look like a valid loop export.");
       return;
     }
-    const importedRoutine = {
-      id: genRoutineId(),
-      name: (typeof parsed.name === 'string' && parsed.name.trim()) ? parsed.name.trim() : 'Imported Loop',
-      exercises: parsed.exercises.map(ex => ({
-        id: genExerciseId(),
-        name: (ex && typeof ex.name === 'string' && ex.name.trim()) ? ex.name.trim() : 'Exercise',
-        audio: (ex && typeof ex.audio === 'string') ? ex.audio : null
-      })),
-      workSeconds: (typeof parsed.workSeconds === 'number' && parsed.workSeconds > 0) ? parsed.workSeconds : 30,
-      restSeconds: (typeof parsed.restSeconds === 'number' && parsed.restSeconds > 0) ? parsed.restSeconds : 10,
-      loopCount: (typeof parsed.loopCount === 'number' && parsed.loopCount > 0) ? parsed.loopCount : DEFAULT_LOOPS
-    };
+    const importedRoutine = parsedRoutineToObject(parsed);
     routines.push(importedRoutine);
     currentRoutine = importedRoutine;
     saveRoutines();
